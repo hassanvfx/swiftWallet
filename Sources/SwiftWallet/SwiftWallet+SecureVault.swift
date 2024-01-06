@@ -11,8 +11,9 @@ import SecureVault
 public class WalletVault<BUNDLE:WalletBundle>:WalletStorage{
     let purchasedKey = "purchasedKey"
     let consumedKey = "consumedKey"
-    public lazy var vault=SecureVault(namespace: "wallet")
-    public init(){
+    public var vault:SecureVault!
+    public init(namespace:String="wallet"){
+        vault=SecureVault(namespace: namespace)
         loadState()
     }
     public func loadState(){
