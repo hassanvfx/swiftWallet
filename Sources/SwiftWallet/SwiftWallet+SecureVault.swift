@@ -5,7 +5,7 @@
 //  Created by Eon Fluxor on 1/5/24.
 //
 
-import SecureVault
+@_implementationOnly import SecureVault
 import SwiftUI
 
 public class WalletVault<BUNDLE: WalletBundle>: WalletStorage {
