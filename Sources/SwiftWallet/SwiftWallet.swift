@@ -120,4 +120,21 @@ public class WalletManager<STORAGE:WalletStorage> where STORAGE.BUNDLE: WalletBu
         let closestExpirationDate = nonExpiredTokens.map { $0.expirationDate }.min()
         return (remainingTokenCount, closestExpirationDate)
     }
+    
+    public var expirationString: String? {
+        // Filter out expired tokens
+        let futureTokens = storage.purchased.filter { $0.expirationDate > Date() }
+
+        // Find the most distant expiration date
+        guard let latestExpirationDate = futureTokens.map({ $0.expirationDate }).max() else {
+            return nil
+        }
+
+        // Convert the date to a string
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+
+        return dateFormatter.string(from: latestExpirationDate)
+    }
 }
