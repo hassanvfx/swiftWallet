@@ -12,12 +12,12 @@ enum UIKitExt: Error {
 }
 
 extension Encodable {
-    func asJSONStringOrEmpty()-> String {
-         let result = try? asJSONString()
-        
+    func asJSONStringOrEmpty() -> String {
+        let result = try? asJSONString()
+
         return result ?? ""
     }
-    
+
     func asJSONString() throws -> String {
         let jsonEncoder = JSONEncoder()
         let data = try jsonEncoder.encode(self)

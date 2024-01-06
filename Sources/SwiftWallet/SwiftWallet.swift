@@ -8,17 +8,18 @@
 import Foundation
 import SwiftUI
 
-public protocol WalletBundle: Codable,Equatable{
-    var tokens:Int { get }
-    var expiration:Date{ get }
-}
-public protocol WalletStorage{
-    associatedtype BUNDLE:WalletBundle
-    var purchased: [WalletToken<BUNDLE>] { get set}
-    var consumed: [WalletToken<BUNDLE>] { get set}
+public protocol WalletBundle: Codable, Equatable {
+    var tokens: Int { get }
+    var expiration: Date { get }
 }
 
-public struct WalletToken<BUNDLE:WalletBundle>: Codable {
+public protocol WalletStorage {
+    associatedtype BUNDLE: WalletBundle
+    var purchased: [WalletToken<BUNDLE>] { get set }
+    var consumed: [WalletToken<BUNDLE>] { get set }
+}
+
+public struct WalletToken<BUNDLE: WalletBundle>: Codable {
     public let count: Int
     public let expirationDate: Date
     public let bundleType: BUNDLE
@@ -29,40 +30,39 @@ public struct WalletToken<BUNDLE:WalletBundle>: Codable {
     }
 }
 
-public struct WalletCache<BUNDLE:WalletBundle>:WalletStorage{
-    public var purchased=[WalletToken<BUNDLE>]()
-    public var consumed=[WalletToken<BUNDLE>]()
+public struct WalletCache<BUNDLE: WalletBundle>: WalletStorage {
+    public var purchased = [WalletToken<BUNDLE>]()
+    public var consumed = [WalletToken<BUNDLE>]()
     public init(purchased: [WalletToken<BUNDLE>] = [WalletToken<BUNDLE>](), consumed: [WalletToken<BUNDLE>] = [WalletToken<BUNDLE>]()) {
         self.purchased = purchased
         self.consumed = consumed
     }
 }
 
-public class WalletManager<STORAGE:WalletStorage> where STORAGE.BUNDLE: WalletBundle {
-
+public class WalletManager<STORAGE: WalletStorage> where STORAGE.BUNDLE: WalletBundle {
     private let purchasedTokenKey = "purchasedTokens"
     private let consumedTokenKey = "consumedTokens"
 
-    private var storage:STORAGE
-    
+    private var storage: STORAGE
+
     public init(storage: STORAGE) {
         self.storage = storage
     }
-    
-    public func reset(){
+
+    public func reset() {
         storage.purchased = []
         storage.consumed = []
     }
 
-    public func addToken(bundle: STORAGE.BUNDLE, expiration:Date?=nil) {
+    public func addToken(bundle: STORAGE.BUNDLE, expiration: Date? = nil) {
         let expirationDate: Date
         let count: Int
 
         expirationDate = expiration ?? bundle.expiration
         count = bundle.tokens
-        
+
         let newToken = WalletToken(count: count, expirationDate: expirationDate, bundleType: bundle)
-        var currentTokens =  storage.purchased
+        var currentTokens = storage.purchased
         currentTokens.append(newToken)
         storage.purchased = currentTokens
     }
@@ -92,16 +92,16 @@ public class WalletManager<STORAGE:WalletStorage> where STORAGE.BUNDLE: WalletBu
 
     public func countConsumedTokens(bundleType: STORAGE.BUNDLE, expirationDate: Date) -> Int {
         storage.consumed.filter { $0.bundleType == bundleType && $0.expirationDate == expirationDate }
-                      .map { $0.count }
-                      .reduce(0, +)
+            .map { $0.count }
+            .reduce(0, +)
     }
 
     public func canConsumeTokens(count: Int) -> Bool {
         let purchasedTokens = storage.purchased
         let consumedTokens = storage.consumed
         let nonExpiredTokenCount = purchasedTokens.filter { $0.expirationDate > Date() }
-                                                  .map { $0.count }
-                                                  .reduce(0, +)
+            .map { $0.count }
+            .reduce(0, +)
         let consumedTokenCount = consumedTokens.map { $0.count }.reduce(0, +)
 
         return (nonExpiredTokenCount - consumedTokenCount) >= count
@@ -120,7 +120,7 @@ public class WalletManager<STORAGE:WalletStorage> where STORAGE.BUNDLE: WalletBu
         let closestExpirationDate = nonExpiredTokens.map { $0.expirationDate }.min()
         return (remainingTokenCount, closestExpirationDate)
     }
-    
+
     public var expirationString: String? {
         // Filter out expired tokens
         let futureTokens = storage.purchased.filter { $0.expirationDate > Date() }

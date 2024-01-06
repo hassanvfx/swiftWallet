@@ -5,8 +5,8 @@
 //  Created by hassan uriostegui on 8/30/22.
 //
 
-import SwiftWallet
 import SwiftUI
+import SwiftWallet
 
 @main
 struct DemoAppApp: App {
