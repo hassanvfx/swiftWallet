@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import SwiftWallet
+@testable import SwiftWallet
 import SwiftUI
 
 

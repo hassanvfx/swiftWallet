@@ -7,11 +7,11 @@
 //
 import UIKit
 
-public enum UIKitExt: Error {
+enum UIKitExt: Error {
     case Encodable(mssg: String)
 }
 
-public extension Encodable {
+extension Encodable {
     func asJSONStringOrEmpty()-> String {
          let result = try? asJSONString()
         
@@ -45,7 +45,7 @@ public extension Encodable {
     }
 }
 
-public extension Encodable {
+extension Encodable {
     func asJSONObject() throws -> [String: Any] {
         let jsonString: String = try asJSONString()
         guard let data = jsonString.data(using: .utf8) else {
@@ -73,7 +73,7 @@ public extension Encodable {
 
 typealias JSONString = String
 
-public enum Codec {
+enum Codec {
     static func json<T: Codable>(from object: T) -> JSONString? {
         let jsonEncoder = JSONEncoder()
         do {
