@@ -11,9 +11,11 @@ import SecureVault
 public class WalletVault<BUNDLE:WalletBundle>:WalletStorage{
     let purchasedKey = "purchasedKey"
     let consumedKey = "consumedKey"
-    public var vault:SecureVault!
-    public init(namespace:String="wallet"){
+    private(set) var vault:SecureVault!
+    private(set) var onLoadedState:(()->Void)?
+    public init(namespace:String="wallet",onLoadedState:(()->Void)?=nil){
         vault=SecureVault(namespace: namespace)
+        self.onLoadedState = onLoadedState
         loadState()
     }
     public func loadState(){
@@ -22,6 +24,9 @@ public class WalletVault<BUNDLE:WalletBundle>:WalletStorage{
             let consumedString = await self.vault.get(key: self.consumedKey) ?? ""
             purchased = Codec.object(fromJSON: purchasedString) ?? []
             consumed = Codec.object(fromJSON: consumedString) ?? []
+            DispatchQueue.main.async{
+                self.onLoadedState?()
+            }
         }
     }
     
