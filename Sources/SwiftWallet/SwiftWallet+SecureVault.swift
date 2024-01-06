@@ -12,7 +12,9 @@ public class WalletVault<BUNDLE:WalletBundle>:WalletStorage{
     let purchasedKey = "purchasedKey"
     let consumedKey = "consumedKey"
     public lazy var vault=SecureVault(namespace: "wallet")
-    public init(){}
+    public init(){
+        loadState()
+    }
     public func loadState(){
         Task(priority:.background){
             let purchasedString = await self.vault.get(key: self.purchasedKey) ?? ""
