@@ -36,15 +36,9 @@ SwiftWallet provides the following key features:
 
 # Usage
 
-<div class="note">
-
-=== This README provides code snippets and examples for understanding
-SwiftWallet’s usage. In real-world applications, it is recommended to
+In real-world applications, it is recommended to
 manage sensitive wallet operations server-side for enhanced security.
 
-</div>
-
-===
 
 ``` swift
 // Define Bundle Types
@@ -115,17 +109,6 @@ However, it’s essential to consider the following caveats:
 
 Please use SwiftWallet responsibly and follow best practices to protect
 sensitive data.
-
-# License
-
-SwiftWallet is licensed under the MIT License. See the
-\[LICENSE\](LICENSE) file for details.
-
-For more information and detailed documentation, visit the \[SwiftWallet
-GitHub Repository\](<https://github.com/yourusername/swiftwallet>).
-
-    Feel free to replace the placeholder URLs and information with your specific project details.
-
 
 # SPM
 
