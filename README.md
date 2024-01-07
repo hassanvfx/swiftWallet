@@ -1,116 +1,123 @@
-# Overview
+# SwiftWallet
 
-SwiftWallet is a sophisticated library designed for managing application
-wallets, offering both a basic memory cache and an encrypted storage
-option backed by the iOS Keychain via SecureVault. This README outlines
-the library’s functionality, demonstrates its usage, and discusses
-security considerations.
+![image](https://github.com/hassanvfx/swiftWallet/assets/425926/714f9297-6eec-420d-be84-536943b00b60)
 
-# Features
 
-SwiftWallet provides the following key features:
+SwiftWallet is a powerful library for iOS applications that provides an
+encrypted store for an app wallet, leveraging the `securevault` library
+for secure data storage.
 
-1.  **Encrypted Wallet Storage:** Utilizes the iOS Keychain via
-    SecureVault to create an encrypted store for persisting an app
-    wallet securely.
+# Features:
 
-2.  **Basic Wallet Operations:** Offers essential wallet operations,
-    including adding tokens, consuming tokens, checking the balance, and
-    determining whether tokens can be consumed.
+- **Encrypted Storage**: Integrates with `securevault`
+  (<https://github.com/hassanvfx/securevault>) for secure wallet
+  storage.
 
-3.  **Bundle Tokens:** Supports bundle tokens, which can include one or
-    multiple tokens and can have specific expiration dates.
+- **Comprehensive Wallet Operations**: Supports adding, consuming
+  tokens, checking balances, and assessing token consumption
+  eligibility.
 
-4.  **Unexpired Token Bundles:** Allows the wallet to compute through
-    unexpired token bundles, ensuring that all tokens can be consumed.
+- **Bundle Tokens Support**: Handles tokens in bundles with specific
+  expiration dates.
 
-5.  **Robust Testing:** Comes with comprehensive test cases to ensure
-    reliability and correctness.
+- **Optimized Token Consumption**: Efficiently computes unexpired token
+  bundles to maximize token usage.
 
-6.  **Memory Cache and SecureVault:** Provides options for both a simple
-    memory cache solution and a secure SecureVault implementation for
-    storage.
+- **Robust Testing Framework**: Includes extensive test cases ensuring
+  reliability.
 
-7.  **Sample Implementations:** Includes sample implementations for both
-    memory cache and SecureVault storage.
+- **Caching Solutions**: Offers both a simple memory cache and a
+  `securevault` implementation.
 
-# Usage
+- **Sample Implementations**: Provides examples for memory cache and
+  `securevault` use.
 
-In real-world applications, it is recommended to
-manage sensitive wallet operations server-side for enhanced security.
+# Practical Implementation Guide:
 
+Based on the unit tests included with SwiftWallet, this guide outlines
+key usage scenarios for the library.
+
+## Setting Up a Wallet Cache
 
 ``` swift
-// Define Bundle Types
-enum BundleType: WalletBundle {
-    case day
-    case week
-    case month
-    case year
+import SwiftUI
+@testable import SwiftWallet
 
-    var tokens: Int {
-        switch self {
-            // Define token counts for different bundle types
-        }
-    }
+class YourClass {
+    typealias Wallet = WalletManager<WalletCache<BundleType>>
+    var wallet: Wallet!
+    let cache = WalletCache<BundleType>()
 
-    var expiration: Date {
-        switch self {
-            // Define expiration dates for different bundle types
-        }
+    init() {
+        wallet = WalletManager(storage: cache)
+        // Additional setup...
     }
 }
-
-// Create a WalletManager with Memory Cache
-let wallet = WalletManager(storage: WalletCache<BundleType>())
-
-// Add Tokens to the Wallet
-let bundle = BundleType.week
-wallet.addToken(bundle: bundle)
-
-// Consume Tokens
-let result = wallet.consumeToken()
-
-// Check Balance
-let balance = wallet.getBalance()
-
-// Determine If Tokens Can Be Consumed
-let canConsume = wallet.canConsumeTokens(count: 1)
 ```
 
-For a more comprehensive example and detailed usage, please refer to the
-SwiftWallet documentation and unit tests.
+## Adding and Consuming Tokens
 
-# Security Considerations
+Adding tokens to a wallet and consuming them is straightforward:
 
-SwiftWallet provides enhanced security by utilizing the iOS Keychain
-through SecureVault. This offers the following advantages:
+``` swift
+func addAndConsumeTokens() {
+    // Adding a week-long token bundle
+    let weekBundle = BundleType.week
+    wallet.addToken(bundle: weekBundle)
 
-- **Data Encryption:** Wallet data is stored in an encrypted format,
-  protecting it from unauthorized access.
+    // Consuming a single token
+    let consumeResult = wallet.consumeToken()
+    if consumeResult {
+        print("Token consumed successfully")
+    } else {
+        print("Failed to consume token")
+    }
+}
+```
 
-- **iOS Keychain Integration:** Leveraging the iOS Keychain adds an
-  extra layer of security, making it challenging for hackers to access
-  wallet data.
+## Checking Token Balance
 
-- **SecureVault Implementation:** SecureVault ensures that data remains
-  secure, even in the face of potential threats.
+To check the current balance of tokens in the wallet:
 
-However, it’s essential to consider the following caveats:
+``` swift
+func checkTokenBalance() {
+    let balance = wallet.getBalance()
+    print("Current token count: \(balance.count)")
+}
+```
 
-- **Minimum Viable Product (MVP):** SwiftWallet serves as an MVP for
-  wallet management. In real-world scenarios, sensitive wallet
-  operations should ideally be managed server-side to minimize potential
-  security threats.
+## Handling Token Expiration
 
-- **Server-Side Management:** For maximum security, consider handling
-  critical wallet operations, such as adding or consuming tokens, on the
-  server side.
+SwiftWallet allows for easy management of token expiration:
 
-Please use SwiftWallet responsibly and follow best practices to protect
-sensitive data.
+``` swift
+func handleTokenExpiration() {
+    wallet.addToken(bundle: .day, expiration: Date())
+    // Simulate time passage or mock date to be after expiration
+    // Check for token consumption
+    if !wallet.consumeToken() {
+        print("Expired token cannot be consumed")
+    }
+}
+```
 
-# SPM
+## Working with SecureVault
 
-This framework was built with the ios-framework  config tool.
-[https://github.com/hassanvfx/ios-framework](https://github.com/hassanvfx/ios-framework)
+For more secure storage, use the `WalletVault` implementation:
+
+``` swift
+class YourSecureClass {
+    typealias Wallet = WalletManager<WalletVault<BundleType>>
+    var wallet: Wallet!
+    let secureVault = WalletVault<BundleType>()
+
+    init() {
+        wallet = WalletManager(storage: secureVault)
+        // Additional secure setup...
+    }
+}
+```
+
+Implementing SwiftWallet in your iOS application provides a robust and
+secure way to manage virtual tokens, with flexible storage options and
+comprehensive testing to ensure reliability.
