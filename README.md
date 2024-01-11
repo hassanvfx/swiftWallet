@@ -32,6 +32,9 @@ for secure data storage.
 - **Sample Implementations**: Provides examples for memory cache and
   `securevault` use.
 
+- **AES.GCM + 256 SecureKey Encryption** As suggested by [Dave Poireir](https://www.linkedin.com/in/dave-poirier-a9b25a9/)
+- **Swift Actor for Tread Safety** As suggested by [Dave Poireir](https://www.linkedin.com/in/dave-poirier-a9b25a9/)
+
 # Practical Implementation Guide:
 
 Based on the unit tests included with SwiftWallet, this guide outlines
