@@ -97,16 +97,10 @@ public class WalletManager<STORAGE: WalletStorage> where STORAGE.BUNDLE: WalletB
     }
 
     public func canConsumeTokens(count: Int) -> Bool {
-        let purchasedTokens = storage.purchased
-        let consumedTokens = storage.consumed
-        let nonExpiredTokenCount = purchasedTokens.filter { $0.expirationDate > Date() }
-            .map { $0.count }
-            .reduce(0, +)
-        let consumedTokenCount = consumedTokens.map { $0.count }.reduce(0, +)
-
-        return (nonExpiredTokenCount - consumedTokenCount) >= count
+        let balance = getBalance().count
+        return balance >= count
     }
-
+	
     public func getBalance() -> (count: Int, closestExpirationDate: Date?) {
         let nonExpiredTokens = storage.purchased.filter { $0.expirationDate > Date() }
         let nonExpiredTokenCount = nonExpiredTokens.map { $0.count }.reduce(0, +)
