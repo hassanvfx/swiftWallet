@@ -12,25 +12,21 @@ for secure data storage.
 - **Encrypted Storage**: Integrates with `securevault`
   (<https://github.com/hassanvfx/securevault>) for secure wallet
   storage.
-
 - **Comprehensive Wallet Operations**: Supports adding, consuming
   tokens, checking balances, and assessing token consumption
   eligibility.
-
 - **Bundle Tokens Support**: Handles tokens in bundles with specific
   expiration dates.
-
 - **Optimized Token Consumption**: Efficiently computes unexpired token
   bundles to maximize token usage.
-
 - **Robust Testing Framework**: Includes extensive test cases ensuring
   reliability.
-
 - **Caching Solutions**: Offers both a simple memory cache and a
   `securevault` implementation.
-
 - **Sample Implementations**: Provides examples for memory cache and
   `securevault` use.
+- **AES.GCM + 256 SecureKey Encryption** As suggested by [Dave Poireir](https://www.linkedin.com/in/dave-poirier-a9b25a9/)
+- **Swift Actor for Tread Safety** As suggested by [Dave Poireir](https://www.linkedin.com/in/dave-poirier-a9b25a9/)
 
 # Practical Implementation Guide:
 
